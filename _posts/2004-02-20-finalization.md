@@ -28,7 +28,7 @@ Finalization is expensive.  It has the following costs:
 
 7. Since we only use a single thread for finalization, we are inherently non-scalable if a process is allocating finalizable objects at a high rate.  One CPU performing finalization might not keep up with 31 other CPUs allocating those finalizable objects.
 
-8. The single finalizer thread is a scarce resource.  There are various circumstances where it can become blocked indefinitely.  At that point, the process will leak resources at some rate and eventually die.  See http://cbrumme.dev/apartments-and-pumping for extensive details.
+8. The single finalizer thread is a scarce resource.  There are various circumstances where it can become blocked indefinitely.  At that point, the process will leak resources at some rate and eventually die.  See <http://cbrumme.dev/apartments-and-pumping> for extensive details.
 
 9. Finalization has a conceptual cost to managed developers.  In particular, it is difficult to write correct Finalize methods as I shall explain.
 
@@ -98,7 +98,7 @@ One possible solution here is to set a flag to indicate that your object has bee
 
 It’s true that the finalizer thread is currently single-threaded (though this may well change in the future).  And it’s true that the finalizer thread will only process instances that – at some point – were discovered to be unreachable from the application.  However, the possibility of resurrection means that your object may become visible to the application before its Finalize method is actually called.  This means that application threads and the finalizer thread can simultaneously be active in your object.
 
-If your finalizable object encapsulates a protected resource like an OS handle, you must carefully consider whether you are exposed to threading attacks.  Shortly before we shipped V1, we fixed a number of handle recycling attacks that were due to race conditions between the application and Finalization.  See http://cbrumme.dev/lifetime for more details.
+If your finalizable object encapsulates a protected resource like an OS handle, you must carefully consider whether you are exposed to threading attacks.  Shortly before we shipped V1, we fixed a number of handle recycling attacks that were due to race conditions between the application and Finalization.  See <http://cbrumme.dev/lifetime> for more details.
 
 <ins>Your Finalizer could be called multiple times</ins>
 
@@ -140,7 +140,7 @@ There are a few points to note here.
 
 * Subject to all of the above, we guarantee that we will dequeue your object and initiate a call to the Finalize method.  We do not guarantee that your Finalize method can be JITted without running out of stack or memory.  We do not guarantee that the execution of your Finalize method will complete without being aborted.  We do not guarantee that any types you require can be loaded and have their .cctors run.  All you get is a “best effort” attempt.  We’ll soon see how Whidbey extensions allow you to do better than this and guarantee full execution.
 
-* (If you want to know more about the shutdown of managed processes, see http://cbrumme.dev/startup-shutdown.)
+* (If you want to know more about the shutdown of managed processes, see <http://cbrumme.dev/startup-shutdown>.)
 
 **SafeHandle**
 
@@ -150,7 +150,7 @@ Whidbey contains some mechanisms that address many of the V1 and V1.1 issues wit
 
 2. It prevents races between an application thread and the finalizer thread in unmanaged code.  And it does this in a manner that leverages the type system.  Specifically, clients are forced to deal with SafeHandles rather than IntPtrs or value types which don’t have strong identity and lifetime semantics.
 
-3. It prevents handle-recycling attacks.  You can read more details about finalization races (#2 above) and this bullet on handle-recycling attacks by reading http://cbrumme.dev/lifetime.  In that blog from last April, I allude to the existence of SafeHandle without giving details.
+3. It prevents handle-recycling attacks.  You can read more details about finalization races (#2 above) and this bullet on handle-recycling attacks by reading <http://cbrumme.dev/lifetime>.  In that blog from last April, I allude to the existence of SafeHandle without giving details.
 
 4. It discourages promotion of large graphs of objects, by placing the finalizable resources in a tiny leaf instance.
 
@@ -184,7 +184,7 @@ A full description of CERs is beyond the scope of a note that is ostensibly abou
 
 Essentially, CERs address issues with asynchronous exceptions.  I have already mentioned asynchronous exceptions, which is the CLR’s term for all the pesky problems that manifest themselves as surprising exceptions.  These are distinct from the application-level exceptions, which presumably are anticipated by and handled by the application.
 
-You can read about asynchronous exceptions and the novel problems introduced by a managed execution environment that virtualizes resources so aggressively at http://cbrumme.dev/reliability.
+You can read about asynchronous exceptions and the novel problems introduced by a managed execution environment that virtualizes resources so aggressively at <http://cbrumme.dev/reliability>.
 
 In V1 and V1.1, the CLR does a poor job of distinguishing asynchronous exceptions from application exceptions.  In Whidbey, we are starting to make this separation but it remains one of the weak design points for our hosting and exception stories.
 
@@ -204,7 +204,7 @@ So the only real concern is whether all the finalizable objects will drain durin
 
 However, a hosted process like SQL Server is quite different.  Because of SQL Server’s availability requirements, it is vital that the process not FailFast for something innocuous like OutOfMemoryExceptions.  Indeed, SQL Server tries to run on the brink of memory exhaustion for performance reasons, so these memory exceptions are a constant fact of life in that environment.  Furthermore, SQL Server uses Thread.Abort explicitly across threads to terminate long-running requests and it uses Thread.Abort implicitly to unload AppDomains.  On a heavily loaded system, AppDomains may be unloaded to relieve resource pressure.
 
-I have a lengthy blog on this topic, but I have not been able to post it because it talks about undisclosed Whidbey features.  At some point (no later than shipping Beta1), you will find it at http://cbrumme.dev with a title of Hosting.  Until then, I’ll just mention that the Whidbey APIs support an escalation policy.  This is a declarative mechanism by which the host can express timeouts for normal finalization, normal AppDomain unload, normal Abort attempts, etc.  In addition to timeouts, the escalation policy can indicate appropriate actions whenever these timeouts expire.  So a normal AppDomain unload could (for example) be escalated to a rude AppDomain unload or a normal process exit or a rude process exit.
+I have a lengthy blog on this topic, but I have not been able to post it because it talks about undisclosed Whidbey features.  At some point (no later than shipping Beta1), you will find it at <http://cbrumme.dev> with a title of Hosting.  Until then, I’ll just mention that the Whidbey APIs support an escalation policy.  This is a declarative mechanism by which the host can express timeouts for normal finalization, normal AppDomain unload, normal Abort attempts, etc.  In addition to timeouts, the escalation policy can indicate appropriate actions whenever these timeouts expire.  So a normal AppDomain unload could (for example) be escalated to a rude AppDomain unload or a normal process exit or a rude process exit.
 
 The distinction between polite/normal and rude involves several aspects beyond finalization.  If we just consider finalization, polite/normal means that we execute both normal and critical finalization.  Contrast this with a rude scenario where we will ignore the normal finalizers, which are discarded, and only execute the critical finalizers.  As you might expect, a similar distinction occurs between executing normal exception backout on threads, vs. restricting ourselves to any backout that is associated with CERs.
 

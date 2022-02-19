@@ -8,7 +8,7 @@ type: post
 published: true
 ---
 
-I’ve been putting off writing this blog, not just because I’m on vacation in Maui and have far more tempting things to do.  It’s because one of my blogs has already been used on Slashdot as evidence that Windows cannot scale and won’t support distributed transactions (http://slashdot.org/comments.pl?sid=66598&cid=6122733), despite the fact that Windows scales well and does support distributed transactions.  So I’m nervous that this new blog will be quoted somewhere as evidence that managed applications cannot be reliable.
+I’ve been putting off writing this blog, not just because I’m on vacation in Maui and have far more tempting things to do.  It’s because one of my blogs has already been used on Slashdot as evidence that Windows cannot scale and won’t support distributed transactions (<http://slashdot.org/comments.pl?sid=66598&cid=6122733>), despite the fact that Windows scales well and does support distributed transactions.  So I’m nervous that this new blog will be quoted somewhere as evidence that managed applications cannot be reliable.
 
 The fact is that there are a lot of robust managed applications out there.  During V1 of .NET, we all ran a peer-to-peer application called Terrarium.  This could run as a background application and would become a screen saver during periods of inactivity.  Towards the end of the release, I was running a week at a time without incident.  The only reason for recycling the process after a week was to switch to a newer CLR so it could be tested.
 
