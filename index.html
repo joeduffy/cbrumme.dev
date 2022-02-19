@@ -1,0 +1,27 @@
+---
+layout: default
+title: Blog
+---
+
+<div id="home">
+    <ul id="blog-posts" class="posts">
+        {% for post in paginator.posts %}
+            <li><div class="post_header"><a href="{{ post.url }}"><b>{{ post.title }}</b></a></div></li>
+            <li>{{ post.content | strip_html | truncate: 255 }} <a href="{{ post.url }}">Read More</a></li>
+            <li><div class="post_preheader"><span>Posted {{ post.date | date: "%A, %B %-d, %Y %l:%M %p" }} by cbrumme</span></div>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="pagination">
+    {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
+    {% endif %}
+
+    <span class="page_number">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+
+    {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+    {% endif %}
+</div>
+

@@ -1,0 +1,17 @@
+title: Chris Brumme's Weblog
+description: .Net notes
+url: http://cbrumme.dev
+repository: joeduffy/cbrumme.dev
+
+encoding: utf-8
+markdown: kramdown
+excerpt_separator: "\n\n"
+
+permalink: /:year/:month/:day/:title/
+timezone: America/Los_Angeles
+
+paginate: 50
+
+safe: true
+lsi: false
+exclude: [.gitignore, CNAME, Dockerfile, README.md]

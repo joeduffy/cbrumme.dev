@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<ul class="posts">
+    <li>
+        <div class="post_preheader">
+            <span>
+                {{ page.date | date: "%A, %B %-d, %Y %l:%M %p" }} 
+            </span>
+        </div>
+
+        <div class="post_header">
+            <b>{{ page.title }}</b>
+        </div>
+
+        <div id="post">
+            {{ content }}
+        </div>
+
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-text="{{ page.title }}" data-show-count="true">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </li>
+</ul>
+
